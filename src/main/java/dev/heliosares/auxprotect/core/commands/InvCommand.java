@@ -55,16 +55,19 @@ public class InvCommand extends Command {
         plugin.runSync(() -> player.openInventory(inventory));
     }
 
-    public static Inventory makeInventory(IAuxProtect plugin_, Player player, OfflinePlayer target,
-                                          PlayerInventoryRecord inv, long when) {
+    public static Inventory makeInventory(IAuxProtect plugin_, Player player, OfflinePlayer target, PlayerInventoryRecord inv, long when) {
         if (plugin_ instanceof AuxProtectSpigot plugin) {
             final Player targetO = target.getPlayer();
             final String targetName = target.getName() == null ? "unknown" : target.getName();
             Pane enderpane = new Pane(Type.SHOW, player);
-
             Inventory enderinv = Bukkit.getServer().createInventory(enderpane, 27,
                     L.INV_RECOVER_MENU__ENDER_HEADER.translate(targetName, Language.getOptionalS(targetName), TimeUtil.millisToString(System.currentTimeMillis() - when)));
             enderinv.setContents(inv.ender());
+
+            Pane backpackPane = new Pane(Type.SHOW, player);
+            Inventory backpackInv = Bukkit.getServer().createInventory(enderpane, 54,
+                    L.INV_RECOVER_MENU__BACKPACK_HEADER.translate(targetName, Language.getOptionalS(targetName), TimeUtil.millisToString(System.currentTimeMillis() - when)));
+            backpackInv.setContents(inv.ender());
 
             Pane pane = new Pane(Type.SHOW, player);
             String ago = TimeUtil.millisToString(System.currentTimeMillis() - when);
@@ -169,7 +172,7 @@ public class InvCommand extends Command {
             }
             int space = 53;
             pane.addButton(space--, Material.RED_STAINED_GLASS_PANE, player::closeInventory, L.INV_RECOVER_MENU__BUTTON__CLOSE.translate());
-            pane.addButton(space--, Material.BLACK_STAINED_GLASS_PANE, () -> player.openInventory(enderinv), L.INV_RECOVER_MENU__BUTTON__ENDER_CHEST.translate());
+            pane.addButton(space--, Material.PURPLE_STAINED_GLASS_PANE, () -> player.openInventory(enderinv), L.INV_RECOVER_MENU__BUTTON__ENDER_CHEST.translate());
             // TODO zz backpack goes here
             pane.addButton(space, Material.GREEN_STAINED_GLASS_PANE, null,
                     inv.exp() >= 0 ? (L.INV_RECOVER_MENU__BUTTON__XP__HAD.translate(inv.exp())) : L.INV_RECOVER_MENU__BUTTON__XP__ERROR.translate());

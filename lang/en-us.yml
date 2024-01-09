@@ -155,6 +155,7 @@ results:
   view-inv: 'View Inv'
 
 inv-recover-menu:
+  backpack-header: '<target>''<optional_s> Backpack - <time> ago'
   main-header: '<target>''<optional_s> Inventory - <time> ago'
   ender-header: '<target>''<optional_s> Ender Chest - <time> ago'
   xp-error: '&cUnable to recover experience.'
@@ -187,7 +188,8 @@ inv-recover-menu:
       - '&cduplicate items &tif they weren''t'
       - '&tactually lost originally.'
     close: '&c&lClose'
-    ender-chest: '&8&lView Enderchest'
+    ender-chest: '&5&lView Enderchest'
+    view-backpack: '&a&lView Backpack'
     xp:
       had: '&2Player had <xp> xp'
       error: '&8No XP data'

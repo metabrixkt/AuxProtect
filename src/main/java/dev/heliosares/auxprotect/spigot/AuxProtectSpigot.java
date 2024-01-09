@@ -96,6 +96,7 @@ public final class AuxProtectSpigot extends JavaPlugin implements IAuxProtect {
     private int SERVER_VERSION;
     private boolean isShuttingDown;
     private String stackLog = "";
+    private Plugin playerVaults;
 
     public static IAuxProtect getInstance() {
         return instance;

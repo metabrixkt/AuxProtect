@@ -256,6 +256,11 @@
             <version>1.22.3</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.drtshock</groupId>
+            <artifactId>PlayerVaults</artifactId>
+            <version>4.2.15</version>
+        </dependency>
     </dependencies>
     <properties>
         <jars>${env.USERPROFILE}/eclipse-workspace/jars</jars>

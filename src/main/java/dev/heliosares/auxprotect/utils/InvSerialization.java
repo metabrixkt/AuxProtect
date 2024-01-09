@@ -10,8 +10,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
+import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 
 public class InvSerialization {
@@ -108,13 +110,13 @@ public class InvSerialization {
         return inventory;
     }
 
-    public static byte[] playerToByteArray(Player player) throws IOException {
+    public static byte[] playerToByteArray(Player player, @Nullable ItemStack[] backpack) throws IOException {
         if (player == null) {
             return null;
         }
         return playerToByteArray(new PlayerInventoryRecord(player.getInventory().getStorageContents(),
                 player.getInventory().getArmorContents(), player.getInventory().getExtraContents(),
-                player.getEnderChest().getContents(), Experience.getTotalExp(player)));
+                player.getEnderChest().getContents(), backpack, Experience.getTotalExp(player)));
     }
 
     public static byte[] playerToByteArray(PlayerInventoryRecord record) throws IOException {
@@ -185,6 +187,7 @@ public class InvSerialization {
     public static PlayerInventoryRecord toPlayerInventory(byte[] bytes) throws IOException, ClassNotFoundException {
         if (bytes == null) return null;
         ItemStack[][] contents = new ItemStack[4][];
+        ItemStack[] backpack = null;
         int exp;
 
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
@@ -197,11 +200,20 @@ public class InvSerialization {
                 }
             }
             exp = stream.readInt();
+            try {
+                int size = stream.readInt();
+                backpack = new ItemStack[size];
+                for (int i = 0; i < size; i++) {
+                    backpack[i] = (ItemStack) stream.readObject();
+                }
+            } catch (EOFException ignored) {
+                // no backpack data
+            }
         }
-        return new PlayerInventoryRecord(contents[0], contents[1], contents[2], contents[3], exp);
+        return new PlayerInventoryRecord(contents[0], contents[1], contents[2], contents[3], backpack, exp);
     }
 
-    public record PlayerInventoryRecord(ItemStack[] storage, ItemStack[] armor, ItemStack[] extra,
-                                        ItemStack[] ender, int exp) {
+    public record PlayerInventoryRecord(ItemStack[] storage, ItemStack[] armor, ItemStack[] extra, ItemStack[] ender,
+                                        @Nullable ItemStack[] backpack, int exp) {
     }
 }
